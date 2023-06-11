@@ -23,13 +23,13 @@ module.exports = {
         new webpack.ProvidePlugin({
             $: 'jquery',
             jQuery: 'jquery',
-            'window.jQueru': 'jquery'
+            'window.jQuery': 'jquery'
         }),
         new ExtractTextPlugin('app.css')
     ],
     module: {
         loaders: [{
-            test: /.js[x]?$/,
+            test: /\.js[x]?$/,
             loader: 'babel-loader',
             exclude: /node_modules/,
             query: {

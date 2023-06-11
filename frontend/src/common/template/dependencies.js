@@ -4,7 +4,6 @@ import 'modules/admin-lte/plugins/jQuery/jquery-2.2.3.min'
 import 'modules/admin-lte/plugins/fastclick/fastclick'
 import 'modules/admin-lte/plugins/slimScroll/jquery.slimscroll.min'
 
-
 import 'modules/font-awesome/css/font-awesome.min.css'
 import 'modules/ionicons/dist/css/ionicons.min.css'
 import 'modules/admin-lte/bootstrap/css/bootstrap.min.css'
