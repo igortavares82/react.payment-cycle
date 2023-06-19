@@ -1,9 +1,10 @@
 import axios from 'axios'
 import { toastr } from 'react-redux-toastr'
-import { reset as resetForm } from 'redux-form' 
+import { initialize, reset as resetForm } from 'redux-form' 
 import { showTabs, selectTab } from '../common/tab/tabActions'
 
 const BASE_URL = 'http://localhost:3003/api'
+const INITIAL_VALUES = {credits: [{}]}
 
 export function getList(){
     const request = axios.get(`${BASE_URL}/billing-cycles`)
@@ -14,19 +15,53 @@ export function getList(){
 }
 
 export function create(values) {
+    return submit(values, 'post')
+}
+
+export function update(values) {
+    return submit(values, 'put')
+}
+
+export function remove(values) {
+    return submit(values, 'delete')
+}
+
+function submit(values, method) {
     return dispatch => {
-        axios.post(`${BASE_URL}/billing-cycles`, values)
-        .then(resp => {
-            toastr.success('Sccess', 'Operation has been done successfully.')
-            dispatch([
-                resetForm('billingCycleForm'),
-                getList(),
-                selectTab('tab-list'),
-                showTabs('tab-list', 'tab-create')
-            ])
-        })
-        .catch(e => {
-            e.response.data.errors.forEach(error => toastr.error('Error', error))
-        })
+        const id = values._id ? values._id : ''
+        axios[method](`${BASE_URL}/billing-cycles/${id}`, values)
+                    .then(resp => {
+                        toastr.success('Success', 'Operation has been done successfully.')
+                        dispatch(init())
+                    })
+                    .catch(e => {
+                        e.response.data.errors.forEach(error => toastr.error('Error', error))
+                    })
     }
+}
+
+export function showUpdate(billingCycle) {
+    return [
+        showTabs('tab-update'),
+        selectTab('tab-update'),
+        initialize('billingCycleForm', billingCycle)
+    ]
+}
+
+export function showDelete(billingCycle) {
+    return [
+        showTabs('tab-delete'),
+        selectTab('tab-delete'),
+        initialize('billingCycleForm', billingCycle)
+    ]
+}
+
+
+export function init(){
+    return [
+        showTabs('tab-list', 'tab-create'),
+        selectTab('tab-list'),
+        getList(),
+        initialize('billingCycleForm', INITIAL_VALUES)
+    ]
 }

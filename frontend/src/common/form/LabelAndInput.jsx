@@ -4,7 +4,7 @@ import Grid from '../layout/Grid'
 export default props => {
 
     return (
-        <Grid>
+        <Grid cols={props.cols}>
             <div className="form-group">
                 <label htmlFor={props.name}>{props.label}</label>
                 <input  {...props.input} 
