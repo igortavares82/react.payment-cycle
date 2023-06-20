@@ -5,12 +5,22 @@ import  { reduxForm, Field, formValueSelector } from 'redux-form'
 
 import { init } from './BillingCycleActions'
 import LabelAndInput from '../common/form/LabelAndInput'
-import CreditList from './CreditList'
+import ItemList from './ItemList'
+import Summary from './Summary'
 
 class BillingCycleForm extends Component {
 
+    calculateSummary() {
+        const sum = (t, v) => t + v
+        return {
+            sumOfCredits: this.props.credits.map(c => +c.value || 0).reduce(sum),
+            sumOfDebits: this.props.debits.map(d => +d.value || 0).reduce(sum)
+        }
+    }
+
     render() {
-        const { handleSubmit, readOnly, credits } = this.props
+        const { handleSubmit, readOnly, credits, debits } = this.props
+        const { sumOfCredits, sumOfDebits} = this.calculateSummary()
         return (
             <form role='form' onSubmit={handleSubmit}>
                 <div className="box-body">
@@ -35,7 +45,21 @@ class BillingCycleForm extends Component {
                             placeholder='type a year'
                             readOnly={readOnly} />
 
-                    <CreditList cols='12 6' list={credits} readOnly={readOnly}/>
+
+                    <Summary credit={sumOfCredits} debit={sumOfDebits} />
+
+                    <ItemList cols='12 6' 
+                              list={credits} 
+                              readOnly={readOnly} 
+                              field='credits' 
+                              legend='Credits'/>
+
+                    <ItemList cols='12 6' 
+                              list={debits} 
+                              readOnly={readOnly} 
+                              field='debits' 
+                              legend='Debits' 
+                              showStatus={true}/>
                 </div>
                 <div className="box-footer">
                     <button type='submit' className={`btn btn-${this.props.submitClass}`}>{this.props.submitLabel}</button>
@@ -48,6 +72,9 @@ class BillingCycleForm extends Component {
 
 BillingCycleForm = reduxForm({form: 'billingCycleForm', destroyOnUnmount: false})(BillingCycleForm)
 const selector = formValueSelector('billingCycleForm')
-const mapStateToProps = state => ({credits: selector(state, 'credits')})
+const mapStateToProps = state => ({
+    credits: selector(state, 'credits'),
+    debits: selector(state, 'debits')
+})
 const mapDispatchToProps = dispatch => bindActionCreators({init}, dispatch)
 export default connect(mapStateToProps, mapDispatchToProps)(BillingCycleForm)
