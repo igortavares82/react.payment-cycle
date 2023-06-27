@@ -4,7 +4,6 @@ import React from 'react'
 import Header from '../common/template/Header'
 import SideBar from '../common/template/SideBar'
 import Footer from '../common/template/Footer'
-import Routes from './routes'
 import Messages from '../common/msg/Messages'
 
 export default props => {
@@ -14,7 +13,7 @@ export default props => {
             <Header />
             <SideBar />
             <div className='content-wrapper'>
-                <Routes />
+                {props.children}
             </div>
             <Footer />
             <Messages />
